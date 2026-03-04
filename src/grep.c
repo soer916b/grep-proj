@@ -7,16 +7,19 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
-    FILE* file;
-    if ((file= fopen(argv[1], "r")) == NULL) {
+    FILE* fptr;
+    if ((fptr= fopen(argv[1], "r")) == NULL) {
         perror("Error in opening file");
         return 1;
     }
     printf("file <%s> openened succesfully!\n", argv[1]);
+    char buff[1024];
+    while(fgets(buff, sizeof(buff), fptr)) {
+        fputs(buff, stdout);
+    }
+    printf("\n");
 
-    // TO-DO: do something with file here.
-
-        if (fclose(file) != 0) {
+        if (fclose(fptr) != 0) {
             perror("Error in closing file");
             return 1;
         }
