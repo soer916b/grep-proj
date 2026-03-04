@@ -1,0 +1,6 @@
+# build output
+bin/
+*.o
+
+# macOS
+.DS_Store
