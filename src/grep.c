@@ -1,33 +1,48 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <stdbool.h>
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "argc %d is invalid.\nUsage: <%s> <file> <pattern>\n", argc, argv[0]);
+    if (argc < 3) {
+        fprintf(stderr, "argc %d is invalid.\nUsage: <%s> <pattern> <file>\n", argc, argv[0]);
         return 1;
     }
-    
-    FILE* fptr;
-    if ((fptr= fopen(argv[1], "r")) == NULL) {
-        perror("Error in opening file");
-        return 1;
+    bool multiple_files = false;
+    if (argc > 3) {
+        multiple_files = true;
     }
-    printf("file <%s> openened succesfully!\n", argv[1]);
-    char buff[1024];
-    while(fgets(buff, sizeof(buff), fptr)) {
-        char* pattern_ptr = strstr(buff, argv[2]);
-        if (pattern_ptr != NULL) {
-            fputs(buff, stdout);
-        }
-    }
-    printf("\n");
-
-        if (fclose(fptr) != 0) {
-            perror("Error in closing file");
+    int i;
+    for (i = 2; i <= argc-1; i++) {
+        FILE* fptr;
+        if ((fptr= fopen(argv[i], "r")) == NULL) {
+            perror("Error in opening file.");
             return 1;
         }
-        printf("file <%s> closed succesfully!\n", argv[1]);
-
+        char buff[1024];
+        while(fgets(buff, sizeof(buff), fptr)) {
+            char* pattern_ptr = strstr(buff, argv[1]);
+            size_t len = strlen(buff);
+            if (pattern_ptr != NULL) {
+                if (!multiple_files) {
+                    fputs(buff, stdout);
+                    if (strcmp(&buff[len-1], "\n") != 0) {
+                        fputs("\n", stdout);
+                    }
+                } else {
+                    fputs(argv[i], stdout);
+                    fputs(": ", stdout);
+                    fputs(buff, stdout);
+                    if (strcmp(&buff[len-1], "\n") != 0) {
+                        fputs("\n", stdout);
+                    }
+                }
+            }
+        }
+            if (fclose(fptr) != 0) {
+                perror("Error in closing file");
+                return 1;
+            }
+    }
     return 0;
 }
