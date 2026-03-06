@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <errno.h>
+#include <string.h>
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
@@ -15,7 +16,10 @@ int main(int argc, char* argv[]) {
     printf("file <%s> openened succesfully!\n", argv[1]);
     char buff[1024];
     while(fgets(buff, sizeof(buff), fptr)) {
-        fputs(buff, stdout);
+        char* pattern_ptr = strstr(buff, argv[2]);
+        if (pattern_ptr != NULL) {
+            fputs(buff, stdout);
+        }
     }
     printf("\n");
 
