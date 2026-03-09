@@ -44,6 +44,5 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
     }
-    printf("This is a test for WSL");
     return 0;
 }
