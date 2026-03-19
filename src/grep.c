@@ -13,20 +13,15 @@ int process_file(bool mul_files, char* pattern, char* filename) {
     char buff[1024];
     while(fgets(buff, sizeof(buff), fptr)) {
         char* pattern_ptr = strstr(buff, pattern);
-        size_t len = strlen(buff);
         if (pattern_ptr != NULL) {
-            if (!mul_files) {
-                fputs(buff, stdout);
-                if (!(buff[len - 1] == '\n')) {
-                    fputs("\n", stdout);
-                }
-            } else {
+            if (mul_files) {
                 fputs(filename, stdout);
                 fputs(": ", stdout);
-                fputs(buff, stdout);
-                if (!(buff[len - 1] == '\n')) {
-                    fputs("\n", stdout);
-                }
+            }
+            size_t len = strlen(buff);
+            fputs(buff, stdout);
+            if (!(buff[len - 1] == '\n')) {
+                fputs("\n", stdout);
             }
         }
     }
@@ -43,16 +38,19 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    bool mul = true;
+    bool multiple_files_mode = true;
     if (argc == 3) {
-        mul = false;
+        multiple_files_mode = false;
     }
 
     int i;
     for (i = 2; i < argc; i++) { 
-        if (process_file(mul, argv[1],argv[i]) == 1) {
-            perror("Error in file processing.");
-            return 1;
+        bool file_error_flag = false;
+        if (process_file(multiple_files_mode, argv[1],argv[i]) == 1) {
+            file_error_flag = true;
+            if (file_error_flag) {
+                return 1;
+            }
         }
     }
     return 0;
