@@ -37,7 +37,7 @@ Search in one or more files with line numbers:
 
 ### Examples
 
-`./bin/grep hello notes.txt`
+`./bin/grep hello notes.txt`  
 `./bin/mini-grep -n hello notes.txt other.txt`
 
 ## Limitations
@@ -50,5 +50,5 @@ This is a small learning project, so the implementation is intentionally simple:
 - Simple argument parsing
 
 ## Project structure
-`src/`: source files
+`src/`: source file  
 `bin/`: compiled binary

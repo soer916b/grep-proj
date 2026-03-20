@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-int process_file(bool print_linenumber, bool mul_files, const char* pattern, const char* filename) {
+int process_file(bool print_linenumber, bool multiple_files, const char* pattern, const char* filename) {
     FILE* fptr;
     if ((fptr= fopen(filename, "r")) == NULL) {
         perror("Error in opening file.");
@@ -14,7 +14,7 @@ int process_file(bool print_linenumber, bool mul_files, const char* pattern, con
     while(fgets(buff, sizeof(buff), fptr)) {
         char* pattern_ptr = strstr(buff, pattern);
         if (pattern_ptr != NULL) {
-            if (mul_files) {
+            if (multiple_files) {
                 fputs(filename, stdout);
                 fputs(": ", stdout);
             }
@@ -30,7 +30,7 @@ int process_file(bool print_linenumber, bool mul_files, const char* pattern, con
         line_counter ++;
     }
         if (fclose(fptr) != 0) {
-            perror("Error in closing file");
+            perror("Error in closing file.");
             return 1;
         }
     return 0;
@@ -42,24 +42,24 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    int pattern_index = 1;
-    int first_file_index = 2;
+    int argv_pattern_index = 1;
+    int argv_first_file_index = 2;
     bool print_linenumber_active = false;
     if (strcmp(argv[1], "-n") == 0 && argc >= 4) {
         print_linenumber_active = true;
-        pattern_index ++;
-        first_file_index ++;
+        argv_pattern_index ++;
+        argv_first_file_index ++;
     }
 
     bool multiple_files_mode = false;
-    if (argc - first_file_index > 1) {
+    if (argc - argv_first_file_index > 1) {
         multiple_files_mode = true;
     }
 
     bool file_error_flag = false;
     int i;
-    for (i = first_file_index; i < argc; i++) { 
-        if (process_file(print_linenumber_active, multiple_files_mode, argv[pattern_index], argv[i]) == 1) {
+    for (i = argv_first_file_index; i < argc; i++) { 
+        if (process_file(print_linenumber_active, multiple_files_mode, argv[argv_pattern_index], argv[i]) == 1) {
             file_error_flag = true;
         }
     }
