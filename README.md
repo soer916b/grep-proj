@@ -48,7 +48,3 @@ This is a small learning project, so the implementation is intentionally simple:
 - Substring matching only, no regular expressions
 - Case-sensitive matching
 - Simple argument parsing
-
-## Project structure
-`src/`: source file  
-`bin/`: compiled binary
