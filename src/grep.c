@@ -1,9 +1,8 @@
 #include <stdio.h>
-#include <errno.h>
 #include <string.h>
 #include <stdbool.h>
 
-int process_file(bool mul_files, char* pattern, char* filename) {
+int process_file(bool print_linenumber, bool mul_files, const char* pattern, const char* filename) {
     FILE* fptr;
     if ((fptr= fopen(filename, "r")) == NULL) {
         perror("Error in opening file.");
@@ -11,6 +10,7 @@ int process_file(bool mul_files, char* pattern, char* filename) {
     }
 
     char buff[1024];
+    int line_counter = 1;
     while(fgets(buff, sizeof(buff), fptr)) {
         char* pattern_ptr = strstr(buff, pattern);
         if (pattern_ptr != NULL) {
@@ -18,12 +18,16 @@ int process_file(bool mul_files, char* pattern, char* filename) {
                 fputs(filename, stdout);
                 fputs(": ", stdout);
             }
+            if (print_linenumber) {
+                printf("line %d: ", line_counter);
+            }
             size_t len = strlen(buff);
             fputs(buff, stdout);
             if (!(buff[len - 1] == '\n')) {
                 fputs("\n", stdout);
             }
         }
+        line_counter ++;
     }
         if (fclose(fptr) != 0) {
             perror("Error in closing file");
@@ -34,24 +38,34 @@ int process_file(bool mul_files, char* pattern, char* filename) {
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
-        fprintf(stderr, "argc %d is invalid.\nUsage: <%s> <pattern> <file>\n", argc, argv[0]);
+        fprintf(stderr, "argc %d is invalid.\nUsage: <%s> <-n (optional)> <pattern> <file>\n", argc, argv[0]);
         return 1;
     }
 
-    bool multiple_files_mode = true;
-    if (argc == 3) {
-        multiple_files_mode = false;
+    int pattern_index = 1;
+    int first_file_index = 2;
+    bool print_linenumber_active = false;
+    if (strcmp(argv[1], "-n") == 0 && argc >= 4) {
+        print_linenumber_active = true;
+        pattern_index ++;
+        first_file_index ++;
     }
 
+    bool multiple_files_mode = false;
+    if (argc - first_file_index > 1) {
+        multiple_files_mode = true;
+    }
+
+    bool file_error_flag = false;
     int i;
-    for (i = 2; i < argc; i++) { 
-        bool file_error_flag = false;
-        if (process_file(multiple_files_mode, argv[1],argv[i]) == 1) {
+    for (i = first_file_index; i < argc; i++) { 
+        if (process_file(print_linenumber_active, multiple_files_mode, argv[pattern_index], argv[i]) == 1) {
             file_error_flag = true;
-            if (file_error_flag) {
-                return 1;
-            }
         }
+    }
+    if (file_error_flag) {
+        return 1;
     }
     return 0;
 }
+
