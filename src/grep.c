@@ -5,7 +5,7 @@
 int process_file(bool print_linenumber, bool multiple_files, const char* pattern, const char* filename) {
     FILE* fptr;
     if ((fptr= fopen(filename, "r")) == NULL) {
-        perror("Error in opening file.");
+        perror("Error in opening file");
         return 1;
     }
 
@@ -30,7 +30,7 @@ int process_file(bool print_linenumber, bool multiple_files, const char* pattern
         line_counter ++;
     }
         if (fclose(fptr) != 0) {
-            perror("Error in closing file.");
+            perror("Error in closing file");
             return 1;
         }
     return 0;

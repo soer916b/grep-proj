@@ -1,6 +1,6 @@
 # mini-grep
 
-A small grep-like command line program written in C as a learning project.
+A small grep-inspired command line program written in C as a learning project.
 
 The project was built to practice:
 
@@ -15,15 +15,15 @@ The project was built to practice:
 
 - Searches for a substring using `strstr`
 - Reads input files line by line using `fgets`
-- Supports one or more input files
-- Prefixes matches with filename when multiple files are searched
+- Supports searching one or more input files
+- Prefixes matches with the filename when multiple files are searched
 - Supports `-n` to print matching line numbers
-- Continues processing other files even if one file fails, and returns a non-zero exit code if at least one file could not be processed
+- Continues processing other files if one file fails, and returns a non-zero exit code if at least one file could not be processed
 
 ## Build
 
-- Compile the program with `make`
-- Clean with `make clean`
+- Compile with `make`
+- Clean build output with `make clean`
 
 ## Usage
 
@@ -38,7 +38,7 @@ Search in one or more files with line numbers:
 ### Examples
 
 `./bin/grep hello notes.txt`  
-`./bin/mini-grep -n hello notes.txt other.txt`
+`./bin/grep -n hello notes.txt other.txt`
 
 ## Limitations
 

@@ -2,7 +2,11 @@
 bin/
 *.o
 
+# editor
+.vscode/
+
+# local test files
+test/
+
 # macOS
 .DS_Store
-
-test/
